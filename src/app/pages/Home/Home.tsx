@@ -1,6 +1,7 @@
 import { Camera, Upload, Book, Brain, LineChart } from 'lucide-react';
 
 import HomeFeatureCard from "@/app/types/HomeFeatureCard";
+import { motion } from "motion/react";
 
 export default function Home() {
   const cards: HomeFeatureCard[] = [
@@ -52,6 +53,10 @@ export default function Home() {
           </div>
         ))}
       </div>
+
+      <motion.div>
+        <img src="/images/students-01.png" alt="Main picture" className="w-1/3 mx-auto my-8" />
+      </motion.div>
     </div>
   );
 }

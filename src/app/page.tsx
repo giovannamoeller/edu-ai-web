@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Camera, Upload, Book, Home as HomeIcon, Brain } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Page } from './types/Page';
 import Essay from "./pages/Essay/Essay";
 import Quiz from "./pages/Quiz/Quiz";
@@ -31,36 +32,60 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      {/* Header with floating animation */}
+      <motion.header
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="bg-white shadow-lg"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-gray-900">EduAI</h1>
-              </div>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                {navItems.map(item => (
-                  <button 
-                    key={item.id}
-                    onClick={() => setSelectedTab(item.page)}
-                    className={`${selectedTab === item.id
-                                  ? 'border-blue-500 text-gray-900'
-                                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                              } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium gap-2`}>
-                    {item.icon}
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <motion.div 
+              className="flex items-center"
+              whileHover={{ scale: 1.05 }}
+            >
+              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
+                EduAI
+              </span>
+            </motion.div>
+
+            <nav className="hidden md:flex space-x-8">
+              {navItems.map(item => (
+                <motion.button
+                  key={item.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSelectedTab(item.page)}
+                  className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                    selectedTab === item.id
+                      ? 'bg-blue-100 text-blue-600'
+                      : 'text-gray-600 hover:text-blue-600'
+                  }`}
+                >
+                  {item.icon}
+                  <span className="ml-2">{item.label}</span>
+                </motion.button>
+              ))}
+            </nav>
           </div>
         </div>
-      </nav>
+      </motion.header>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {renderPage()}
-      </main>        
+      {/* Main Content with Page Transitions */}
+      <main className="max-w-7xl mx-auto py-8 px-4">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {renderPage()}
+          </motion.div>
+        </AnimatePresence>
+      </main>
     </div>
   );
 };
