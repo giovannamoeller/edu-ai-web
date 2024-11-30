@@ -14,7 +14,13 @@ export default function EssayUpload({ onClose }: EssayUploadProps) {
   const [uploading, setUploading] = useState<boolean>(false);
 
   function handleEssayFileUpload() {
-    
+    if (!file || !subject) return;
+    setUploading(true);
+    // TODO: Implement file upload logic
+    setTimeout(() => {
+      setUploading(false);
+      onClose();
+    }, 2000);
   }
 
   return (
