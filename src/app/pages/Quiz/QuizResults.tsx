@@ -1,6 +1,6 @@
 'use client';
 
-import { Brain, ArrowRight, RotateCcw } from 'lucide-react';
+import { Brain, ArrowRight, RotateCcw, CheckCircle, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 
@@ -26,61 +26,82 @@ export default function QuizResults({
   const percentage = (score / questions.length) * 100;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="max-w-2xl mx-auto"
-    >
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold mb-4">Quiz Results</h2>
-        <div className="text-5xl font-bold text-primary mb-2">
-          {score}/{questions.length}
-        </div>
-        <p className="text-gray-600">
-          You got {percentage}% of the questions right!
-        </p>
-      </div>
-
-      <div className="space-y-6 mb-8">
-        {questions.map((question, index) => (
-          <div
-            key={index}
-            className={`p-4 rounded-lg ${
-              question.answer === answers[index]
-                ? 'bg-green-50 border border-green-200'
-                : 'bg-red-50 border border-red-200'
-            }`}
-          >
-            <h4 className="font-semibold mb-2">{question.question}</h4>
-            <div className="space-y-2">
-              {question.alternatives.map((alternative, altIndex) => (
-                <div
-                  key={altIndex}
-                  className={`p-2 rounded ${
-                    altIndex === question.answer
-                      ? 'bg-green-100 text-green-800'
-                      : altIndex === answers[index]
-                      ? 'bg-red-100 text-red-800'
-                      : 'bg-white'
-                  }`}
-                >
-                  {alternative}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={onReset}
-        className="mx-auto flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
+    <div className="max-w-3xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-8"
       >
-        Try Another Quiz
-        <RotateCcw className="w-5 h-5" />
-      </motion.button>
-    </motion.div>
+        {/* Score Summary */}
+        <div className="text-center space-y-4">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", delay: 0.2 }}
+            className="w-32 h-32 rounded-full bg-gradient-to-r from-primary to-accent mx-auto flex items-center justify-center"
+          >
+            <span className="text-4xl font-bold text-white">{Math.round(score)}%</span>
+          </motion.div>
+          <h2 className="text-2xl font-bold">Quiz Complete!</h2>
+          <p className="text-gray-600">
+            You got {score} out of {questions.length} questions correct
+          </p>
+        </div>
+
+        {/* Questions Review */}
+        <div className="space-y-6">
+          {questions.map((question, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white rounded-xl shadow-lg overflow-hidden"
+            >
+              <div className={`h-2 ${
+                answers[index] === question.answer
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500'
+                  : 'bg-gradient-to-r from-red-500 to-pink-500'
+              }`} />
+              <div className="p-6">
+                <h3 className="font-semibold mb-4">{question.question}</h3>
+                <div className="space-y-2">
+                  {question.alternatives.map((alternative, altIndex) => (
+                    <div
+                      key={altIndex}
+                      className={`p-3 rounded-lg flex justify-between items-center ${
+                        altIndex === question.answer
+                          ? 'bg-green-100 text-green-800'
+                          : altIndex === answers[index]
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-gray-50'
+                      }`}
+                    >
+                      <span>{alternative}</span>
+                      {altIndex === question.answer ? (
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                      ) : altIndex === answers[index] ? (
+                        <X className="w-5 h-5 text-red-600" />
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Reset Button */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onReset}
+          className="mx-auto flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-xl shadow-lg"
+        >
+          <RotateCcw className="w-5 h-5" />
+          Try Another Quiz
+        </motion.button>
+      </motion.div>
+    </div>
   );
 }

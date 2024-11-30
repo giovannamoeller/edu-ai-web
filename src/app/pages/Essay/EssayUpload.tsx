@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from "react"; 
-import { Upload, X, Check, AlertCircle } from 'lucide-react';
+import { Upload, X, Check, AlertCircle, CheckCircle } from 'lucide-react';
 import Essay from "../../types/Essay";
+import { motion } from "motion/react";
 
 interface EssayUploadProps {  
   onClose: () => void;
@@ -10,8 +11,9 @@ interface EssayUploadProps {
 
 export default function EssayUpload({ onClose }: EssayUploadProps) {
   const [subject, setSubject] = useState<string>('');
-  const [file, setFile] = useState<string>('');
+  const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleEssayFileUpload() {
     if (!file || !subject) return;
@@ -24,64 +26,112 @@ export default function EssayUpload({ onClose }: EssayUploadProps) {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
-      <h3 className="text-xl font-semibold mb-4">Upload Essay</h3>
-      
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Subject
-        </label>
-        <input
-          type="text"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          className="w-full p-2 border rounded-md"
-          placeholder="Enter essay subject"
-        />
-      </div>
+    <div className="max-w-3xl mx-auto">
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center space-y-6 mb-12"
+      >
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
+          Submit Your Essay
+        </h1>
+        <p className="text-xl text-gray-600">
+          Get instant feedback and improve your writing
+        </p>
+      </motion.section>
 
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Essay File
-        </label>
-        <div className="border-2 border-dashed rounded-lg p-6 text-center">
-          <input
-            type="file"
-            onChange={(e) => setFile('file.name')}
-            className="hidden"
-            id="file-upload"
-            accept=".pdf,.jpg,.jpeg,.png"
-          />
-          <label
-            htmlFor="file-upload"
-            className="cursor-pointer text-blue-500 hover:text-blue-600"
-          >
-            <Upload className="mx-auto mb-2" />
-            <span>Click to upload or drag and drop</span>
-          </label>
-          {file && (
-            <div className="mt-2 text-sm text-gray-600">
-              Selected: {file}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="bg-white rounded-2xl shadow-lg p-8"
+      >
+        <div className="space-y-6">
+          {/* Subject Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Essay Subject
+            </label>
+            <input
+              type="text"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary/50 transition-all"
+              placeholder="Enter the main topic of your essay"
+            />
+          </div>
+
+          {/* File Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Upload Essay
+            </label>
+            <div className="border-2 border-dashed rounded-lg p-8 text-center">
+              {file ? (
+                <div className="space-y-4">
+                  <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />
+                  <p className="text-green-600 font-medium">{file.name}</p>
+                  <button
+                    onClick={() => setFile(null)}
+                    className="text-red-500 hover:text-red-600"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const droppedFile = e.dataTransfer.files[0];
+                    if (droppedFile) setFile(droppedFile);
+                  }}
+                  className="space-y-4"
+                >
+                  <Upload className="w-12 h-12 text-gray-400 mx-auto" />
+                  <p className="text-gray-600">
+                    Drag and drop your file here, or{' '}
+                    <button
+                      onClick={() => document.getElementById('fileInput')?.click()}
+                      className="text-primary hover:text-accent"
+                    >
+                      browse
+                    </button>
+                  </p>
+                  <input
+                    id="fileInput"
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    accept=".pdf,.doc,.docx,.txt"
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
 
-      <div className="flex justify-end gap-4">
-        <button
-          onClick={onClose}
-          className="px-4 py-2 text-gray-600 hover:text-gray-800"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleEssayFileUpload}
-          disabled={!file || !subject || uploading}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-400"
-        >
-          {uploading ? 'Uploading...' : 'Upload Essay'}
-        </button>
-      </div>
+          {/* Submit Button */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            disabled={!subject || !file || isLoading}
+            className={`w-full py-3 rounded-lg font-semibold text-white
+              ${!subject || !file
+                ? 'bg-gray-300 cursor-not-allowed'
+                : 'bg-gradient-to-r from-primary to-accent shadow-lg'
+              }`}
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Uploading...
+              </div>
+            ) : (
+              'Submit Essay'
+            )}
+          </motion.button>
+        </div>
+      </motion.div>
     </div>
   );
 }

@@ -1,7 +1,10 @@
 interface Essay {
-  //id: string;
-  //title: string;
-  fileName: string;
+  id: string;
+  subject: string;
+  status: string;
+  createdAt: Date;
+  score?: number;
+  //fileName: string;
   //fileType: string;
 }
 

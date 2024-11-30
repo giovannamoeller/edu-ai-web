@@ -1,34 +1,38 @@
+'use client';
+
 import { Camera, Upload, Book, Brain, LineChart } from 'lucide-react';
 
 import HomeFeatureCard from "@/app/types/HomeFeatureCard";
 import { motion } from "motion/react";
+import { useState } from 'react';
+import EssayList from '../Essay/EssayList';
 
 export default function Home() {
   const cards: HomeFeatureCard[] = [
     {
       title: 'Submit an Essay',
       description: 'Get feedback and scoring on your writing',
-      icon: <Upload className="w-8 h-8" />,
+      icon: <Upload className="w-12 h-12 text-white" />,
       color: "from-blue-500 to-cyan-500"
     },
     {
       title: 'Previous Essays',
       description: 'Review all your submitted essays',
-      icon: <Book className="w-8 h-8" />,
+      icon: <Book className="w-12 h-12 text-white" />,
       color: "from-purple-500 to-pink-500"
     },
     {
       title: 'Progress Tracking',
       description: 'Monitor your improvement over time',
-      icon: <LineChart className="w-8 h-8" />,
-      color: "from-orange-500 to-red-500"
+      icon: <LineChart className="w-12 h-12 text-white" />,
+      color: "from-lime-500 to-green-500"
     },
-    {
+    /*{
       title: 'Practice Quiz',
       description: 'Test your knowledge on various topics',
-      icon: <Brain className="w-8 h-8" />,
+      icon: <Brain className="w-12 h-12 text-white" />,
       color: "from-green-500 to-yellow-500"
-    }
+    }*/
   ];
   
   return (
@@ -37,25 +41,25 @@ export default function Home() {
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center space-y-8"
+        className="text-center space-y-8 mt-8"
       >
         <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-          Prepare for Success
+          Prepare for success
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Enhance your writing skills and knowledge with our AI-powered learning platform
+          Enhance your writing skills with our AI-powered learning platform.
         </p>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg"
+          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg"
         >
-          Start Learning Now
+          Start Practicing Now
         </motion.button>
       </motion.section>
 
       {/* Features Grid */}
-      <section className="grid md:grid-cols-3 gap-8">
+      <section className="w-full mx-auto grid md:grid-cols-3 gap-8">
         {cards.map((card, index) => (
           <motion.div
             key={index}
@@ -65,7 +69,7 @@ export default function Home() {
             whileHover={{ y: -5 }}
             className="bg-white rounded-2xl shadow-xl overflow-hidden"
           >
-            <div className={`h-40 bg-gradient-to-r ${card.color}`}>
+            <div className={`h-40 bg-gradient-to-r ${card.color} flex justify-center items-center drop-shadow-xl`}>
               {card.icon}
             </div>
             <div className="p-6">
@@ -77,7 +81,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <motion.section 
+      {/*<motion.section 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
@@ -100,7 +104,7 @@ export default function Home() {
             <div className="text-gray-600">{stat.label}</div>
           </div>
         ))}
-      </motion.section>
+      </motion.section>*/}
     </div>
   );
 }

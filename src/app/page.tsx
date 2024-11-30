@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Camera, Upload, Book, Home as HomeIcon, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Page } from './types/Page';
-import Essay from "./pages/Essay/Essay";
+import EssayList from "./pages/Essay/EssayList";
 import Quiz from "./pages/Quiz/Quiz";
 import Home from "./pages/Home/Home";
 
@@ -15,7 +15,7 @@ export default function App() {
   const navItems = [
     { id: 'home', label: 'Home', icon: <HomeIcon size={20} />, page: Page.Home },
     { id: 'essays', label: 'Essays', icon: <Book size={20} />, page: Page.Essays },
-    { id: 'quiz', label: 'Quiz', icon: <Brain size={20} />, page: Page.Quiz }
+    //{ id: 'quiz', label: 'Quiz', icon: <Brain size={20} />, page: Page.Quiz }
   ];
 
   function renderPage(): JSX.Element {
@@ -23,7 +23,7 @@ export default function App() {
       case Page.Home:
         return <Home/>;
       case Page.Essays:
-        return <Essay/>;
+        return <EssayList/>;
       case Page.Quiz:
         return <Quiz/>;
       default:
@@ -45,7 +45,7 @@ export default function App() {
               className="flex items-center"
               whileHover={{ scale: 1.05 }}
             >
-              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
+              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text select-none">
                 EduAI
               </span>
             </motion.div>
@@ -59,8 +59,8 @@ export default function App() {
                   onClick={() => setSelectedTab(item.page)}
                   className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
                     selectedTab === item.id
-                      ? 'bg-blue-100 text-blue-600'
-                      : 'text-gray-600 hover:text-blue-600'
+                      ? 'bg-blue-100 text-purple-600'
+                      : 'text-gray-600 hover:text-purple-600'
                   }`}
                 >
                   {item.icon}
