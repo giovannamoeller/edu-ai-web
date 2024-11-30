@@ -1,91 +1,116 @@
 'use client';
 
-import Image from "next/image";
-import { useState } from "react";
-import { Camera, Upload, Book, Home as HomeIcon, Brain } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Page } from './types/Page';
-import EssayList from "./pages/Essay/EssayList";
-import Quiz from "./pages/Quiz/Quiz";
-import Home from "./pages/Home/Home";
+import MainLayout from '@/app/components/layout/MainLayout';
+import { Camera, Upload, Book, Brain, LineChart } from 'lucide-react';
 
-export default function App() {
-  const [selectedTab, setSelectedTab] = useState<Page>(Page.Home);
+import HomeFeatureCard from "@/types/HomeFeatureCard";
+import { motion } from "motion/react";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-  const navItems = [
-    { id: 'home', label: 'Home', icon: <HomeIcon size={20} />, page: Page.Home },
-    { id: 'essays', label: 'Essays', icon: <Book size={20} />, page: Page.Essays },
-    //{ id: 'quiz', label: 'Quiz', icon: <Brain size={20} />, page: Page.Quiz }
+export default function HomePage() {
+  const router = useRouter();
+  
+  const cards: HomeFeatureCard[] = [
+    {
+      title: 'Submit an Essay',
+      description: 'Get feedback and scoring on your writing',
+      icon: <Upload className="w-12 h-12 text-white" />,
+      color: "from-blue-500 to-cyan-500"
+    },
+    {
+      title: 'Previous Essays',
+      description: 'Review all your submitted essays',
+      icon: <Book className="w-12 h-12 text-white" />,
+      color: "from-purple-500 to-pink-500"
+    },
+    {
+      title: 'Progress Tracking',
+      description: 'Monitor your improvement over time',
+      icon: <LineChart className="w-12 h-12 text-white" />,
+      color: "from-lime-500 to-green-500"
+    },
+    /*{
+      title: 'Practice Quiz',
+      description: 'Test your knowledge on various topics',
+      icon: <Brain className="w-12 h-12 text-white" />,
+      color: "from-green-500 to-yellow-500"
+    }*/
   ];
 
-  function renderPage(): JSX.Element {
-    switch (selectedTab) {
-      case Page.Home:
-        return <Home/>;
-      case Page.Essays:
-        return <EssayList/>;
-      case Page.Quiz:
-        return <Quiz/>;
-      default:
-        return <Home/>;
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      {/* Header with floating animation */}
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="bg-white shadow-lg"
-      >
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between h-16">
-            <motion.div 
-              className="flex items-center"
-              whileHover={{ scale: 1.05 }}
-            >
-              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text select-none">
-                EduAI
-              </span>
-            </motion.div>
-
-            <nav className="hidden md:flex space-x-8">
-              {navItems.map(item => (
-                <motion.button
-                  key={item.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedTab(item.page)}
-                  className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
-                    selectedTab === item.id
-                      ? 'bg-blue-100 text-purple-600'
-                      : 'text-gray-600 hover:text-purple-600'
-                  }`}
-                >
-                  {item.icon}
-                  <span className="ml-2">{item.label}</span>
-                </motion.button>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </motion.header>
-
-      {/* Main Content with Page Transitions */}
-      <main className="max-w-7xl mx-auto py-8 px-4">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedTab}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+    <MainLayout>
+      <div className="space-y-16">
+        {/* Hero Section */}
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center space-y-8 mt-8"
+        >
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
+            Prepare for success
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Enhance your writing skills with our AI-powered learning platform.
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/essays')}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg"
           >
-            {renderPage()}
-          </motion.div>
-        </AnimatePresence>
-      </main>
-    </div>
+            Start Practicing Now
+          </motion.button>
+        </motion.section>
+
+        {/* Features Grid */}
+        <section className="w-full mx-auto grid md:grid-cols-3 gap-8">
+          {cards.map((card, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.2 }}
+              whileHover={{ y: -5 }}
+              className="bg-white rounded-2xl shadow-xl overflow-hidden"
+            >
+              <div className={`h-40 bg-gradient-to-r ${card.color} flex justify-center items-center drop-shadow-xl`}>
+                {card.icon}
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
+                <p className="text-gray-600">{card.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </section>
+
+        {/* Stats Section */}
+        {/*<motion.section 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="grid grid-cols-3 gap-8 bg-white p-8 rounded-2xl shadow-lg"
+        >
+          {[
+            { label: "Students", value: "10,000+" },
+            { label: "Essays Reviewed", value: "50,000+" },
+            { label: "Success Rate", value: "95%" }
+          ].map((stat, index) => (
+            <div key={index} className="text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.8 + index * 0.2 }}
+                className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text"
+              >
+                {stat.value}
+              </motion.div>
+              <div className="text-gray-600">{stat.label}</div>
+            </div>
+          ))}
+        </motion.section>*/}
+      </div>
+    </MainLayout>
   );
-};
+}

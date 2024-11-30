@@ -2,7 +2,7 @@
 
 import { useState } from "react"; 
 import { Upload, X, Check, AlertCircle, CheckCircle } from 'lucide-react';
-import Essay from "../../types/Essay";
+import Essay from "../../../types/Essay";
 import { motion } from "motion/react";
 
 interface EssayUploadProps {  
