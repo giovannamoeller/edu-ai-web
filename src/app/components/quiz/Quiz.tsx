@@ -1,6 +1,5 @@
 'use client';
 
-import { Brain, ArrowRight, RotateCcw } from 'lucide-react';
 import { useState } from 'react';
 import QuizStart from './QuizStart';
 import QuizQuestion from './QuizQuestion';

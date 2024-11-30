@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from "react"; 
-import { Upload, X, Check, AlertCircle, CheckCircle } from 'lucide-react';
-import Essay from "../../../types/Essay";
+import { Upload, CheckCircle } from 'lucide-react';
 import { motion } from "motion/react";
 
 interface EssayUploadProps {  

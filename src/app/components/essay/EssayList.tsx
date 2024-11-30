@@ -5,8 +5,6 @@ import { Upload, ArrowRight, CheckCircle, Clock } from 'lucide-react';
 import { motion } from "motion/react";
 import Essay from "../../../types/Essay";
 import { useRouter } from 'next/navigation';
-import { userAgent } from "next/server";
-
 
 export default function EssayList() {
   const [activeView, setActiveView] = useState('history');

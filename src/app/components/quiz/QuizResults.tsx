@@ -1,7 +1,6 @@
 'use client';
 
-import { Brain, ArrowRight, RotateCcw, CheckCircle, X } from 'lucide-react';
-import { useState } from 'react';
+import { RotateCcw, CheckCircle, X } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface QuizResultsProps {

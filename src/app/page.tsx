@@ -1,11 +1,10 @@
 'use client';
 
 import MainLayout from '@/app/components/layout/MainLayout';
-import { Camera, Upload, Book, Brain, LineChart } from 'lucide-react';
+import { Upload, Book, LineChart } from 'lucide-react';
 
 import HomeFeatureCard from "@/types/HomeFeatureCard";
 import { motion } from "motion/react";
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function HomePage() {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Brain, ArrowRight, RotateCcw, Book } from 'lucide-react';
+import { Brain, ArrowRight, Book } from 'lucide-react';
 
 import { motion } from 'motion/react';
 
