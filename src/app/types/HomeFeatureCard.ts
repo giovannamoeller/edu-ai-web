@@ -2,7 +2,7 @@ interface HomeFeatureCard {
   title: string;
   description: string;
   icon: JSX.Element;
-  action: string;
+  color: string;
 }
 
 export default HomeFeatureCard;
