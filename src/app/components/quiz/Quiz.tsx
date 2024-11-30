@@ -31,7 +31,7 @@ export default function Quiz() {
     ];
 
     setQuizData(mockQuizData);
-    setQuizState('quiz');
+    setQuizState(subject);
     setCurrentQuestion(0);
     setAnswers([]);
   }

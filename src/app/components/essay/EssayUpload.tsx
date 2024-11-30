@@ -20,8 +20,13 @@ export default function EssayUpload({ onClose }: EssayUploadProps) {
     // TODO: Implement file upload logic
     setTimeout(() => {
       setUploading(false);
+      setIsLoading(false);
       onClose();
     }, 2000);
+  }
+
+  if (uploading) {
+    console.log('Is uploading')
   }
 
   return (
@@ -114,6 +119,7 @@ export default function EssayUpload({ onClose }: EssayUploadProps) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             disabled={!subject || !file || isLoading}
+            onClick={handleEssayFileUpload}
             className={`w-full py-3 rounded-lg font-semibold text-white
               ${!subject || !file
                 ? 'bg-gray-300 cursor-not-allowed'

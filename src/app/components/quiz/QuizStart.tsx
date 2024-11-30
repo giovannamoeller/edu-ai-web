@@ -14,6 +14,8 @@ export default function QuizStart({ onStart }: QuizStartProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   function handleSubmit() {
+    setIsLoading(false);
+    onStart(subject);
   }
 
   return (

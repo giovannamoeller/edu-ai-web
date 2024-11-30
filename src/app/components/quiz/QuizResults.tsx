@@ -22,7 +22,7 @@ export default function QuizResults({
     question.answer === answers[index] ? acc + 1 : acc, 0
   );
   
-  const percentage = (score / questions.length) * 100;
+  //const percentage = (score / questions.length) * 100;
 
   return (
     <div className="max-w-3xl mx-auto">
