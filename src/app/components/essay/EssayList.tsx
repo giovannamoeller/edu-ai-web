@@ -1,6 +1,6 @@
 'use client';
 
-import { Upload, ArrowRight, CheckCircle, Clock, ChartArea, Loader } from 'lucide-react';
+import { Upload, ArrowRight, CheckCircle, Clock, ChartArea } from 'lucide-react';
 import { motion } from "motion/react";
 import Essay from "../../../types/Essay";
 import { useRouter } from 'next/navigation';

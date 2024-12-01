@@ -1,5 +1,5 @@
 import Essay  from '../types/Essay';
-import { APIError } from '@/types/APIError';
+import { EssayAPIError } from '@/types/EssayAPIError';
 import { config } from '../lib/config';
 
 class APIService {
@@ -21,7 +21,7 @@ class APIService {
       console.log(result);
       return result;
     } catch {
-      throw new Error(APIError.DECODING_ERROR);
+      throw new Error(EssayAPIError.DECODING_ERROR);
     }
   }
 

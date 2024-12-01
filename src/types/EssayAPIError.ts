@@ -1,4 +1,4 @@
-export enum APIError {
+export enum EssayAPIError {
   INVALID_URL = 'Invalid URL',
   INVALID_RESPONSE = 'Invalid server response',
   HTTP_ERROR = 'Server error',

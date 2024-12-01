@@ -1,21 +1,73 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion } from 'motion/react';
 import { TrendingUp, TrendingDown, BarChart2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { api } from '@/services/api';
+import Essay  from "@/types/Essay";
+
+const StatCard = ({ title, value, icon, trend }: { 
+  title: string; 
+  value: number; 
+  icon: React.ReactNode; 
+  trend?: 'up' | 'down' 
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="bg-white rounded-xl shadow-lg p-6"
+  >
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm text-gray-500">{title}</p>
+        <h3 className="text-2xl font-bold mt-1">{value}</h3>
+        {trend && <p className={`text-sm ${trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+          {trend === 'up' ? '+' : '-'}5% from last month
+        </p>}
+      </div>
+      <div className={`p-3 rounded-full ${
+        trend === 'up' ? 'bg-green-100 text-green-600' :
+        trend === 'down' ? 'bg-red-100 text-red-600' :
+        'bg-blue-100 text-blue-600'
+      }`}>
+        {icon}
+      </div>
+    </div>
+  </motion.div>
+);
 
 export default function EssayProgressTracking() {
-  const essays = [
-    { date: '2024-01-15', score: 850, subject: 'The Great Gatsby' },
-    { date: '2024-02-01', score: 920, subject: 'To Kill a Mockingbird' },
-    { date: '2024-02-15', score: 780, subject: '1984' },
-    { date: '2024-03-01', score: 640, subject: 'Pride and Prejudice' }
-  ];
+  const [essays, setEssays] = useState<Essay[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadEssays = async () => {
+      try {
+        const data = await api.fetchEssays();
+        // Filter only completed essays with scores
+        setEssays(data.filter(essay => 
+          essay.status === 'completed' && typeof essay.score === 'number'
+        ));
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load essays');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadEssays();
+  }, []);
 
   const stats = useMemo(() => {
-    const scores = essays.map(essay => essay.score);
+    if (essays.length === 0) {
+      return { highest: 0, lowest: 0, average: 0, totalEssays: 0 };
+    }
+
+    const scores = essays.map(essay => essay.score || 0);
     return {
       highest: Math.max(...scores),
       lowest: Math.min(...scores),
@@ -24,30 +76,43 @@ export default function EssayProgressTracking() {
     };
   }, [essays]);
 
-  const StatCard = ({ title, value, icon, trend }: { title: string; value: number; icon: React.ReactNode; trend?: string }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl shadow-lg p-6"
-    >
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-500">{title}</p>
-          <h3 className="text-2xl font-bold mt-1">{value}</h3>
-          {trend && <p className={`text-sm ${trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
-            {trend === 'up' ? '+' : '-'}5% from last month
-          </p>}
-        </div>
-        <div className={`p-3 rounded-full ${
-          trend === 'up' ? 'bg-green-100 text-green-600' :
-          trend === 'down' ? 'bg-red-100 text-red-600' :
-          'bg-blue-100 text-blue-600'
-        }`}>
-          {icon}
-        </div>
+  const chartData = useMemo(() => {
+    return essays.map(essay => ({
+      date: essay.createdAt,
+      score: essay.score || 0,
+      subject: essay.subject
+    })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }, [essays]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
-    </motion.div>
-  );
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500 mb-4">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="text-blue-600 hover:underline"
+        >
+          Try again
+        </button>
+      </div>
+    );
+  }
+
+  if (essays.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">No completed essays found. Submit some essays to see your progress!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -91,7 +156,7 @@ export default function EssayProgressTracking() {
         <CardContent>
           <div className="h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={essays}>
+              <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="date" 
@@ -100,7 +165,7 @@ export default function EssayProgressTracking() {
                 <YAxis domain={[0, 1000]} />
                 <Tooltip
                   labelFormatter={(label: string) => new Date(label).toLocaleDateString()}
-                  formatter={(value: string, name: string) => [value, 'Score']}
+                  formatter={(value: number) => [`Score: ${value}`, '']}
                 />
                 <Line
                   type="monotone"
@@ -132,7 +197,7 @@ export default function EssayProgressTracking() {
         </CardHeader>
         <CardContent>
           <div className="divide-y">
-            {essays.map((essay, index) => (
+            {chartData.map((essay, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
