@@ -4,7 +4,7 @@ import { Upload, ArrowRight, CheckCircle, Clock, ChartArea } from 'lucide-react'
 import { motion } from "motion/react";
 import Essay from "../../../types/Essay";
 import { useRouter } from 'next/navigation';
-import { api } from "@/services/api";
+import { api } from "@/services/mock-api";
 import { useEffect, useState } from 'react';
 
 export default function EssayList() {
@@ -13,21 +13,30 @@ export default function EssayList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function loadEssays() {
-      try {
-        const data = await api.fetchEssays();
-        setEssays(data);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load essays');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  async function loadEssays() {
+    try {
+      const data = await api.fetchEssays();
+      setEssays(data);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load essays');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadEssays();
   }, []);
+
+  useEffect(() => {
+    const hasProcessingEssays = essays.some(essay => essay.status === 'processing');
+    
+    if (hasProcessingEssays) {
+      const interval = setInterval(loadEssays, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [essays]);
 
   if (isLoading) {
     return (

@@ -3,7 +3,7 @@
 import { useState } from "react"; 
 import { Upload, CheckCircle } from 'lucide-react';
 import { motion } from "motion/react";
-import { api } from "@/services/api";
+import { api } from "@/services/mock-api";
 
 interface EssayUploadProps {  
   onClose: () => void;
@@ -115,7 +115,7 @@ export default function EssayUpload({ onClose }: EssayUploadProps) {
                     type="file"
                     className="hidden"
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
-                    accept=".pdf,.doc,.docx,.txt"
+                    accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
                   />
                 </div>
               )}
@@ -131,7 +131,7 @@ export default function EssayUpload({ onClose }: EssayUploadProps) {
             className={`w-full py-3 rounded-lg font-semibold text-white
               ${!subject || !file
                 ? 'bg-gray-300 cursor-not-allowed'
-                : 'bg-gradient-to-r from-primary to-accent shadow-lg'
+                : 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg'
               }`}
           >
             {isLoading ? (

@@ -5,7 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { motion } from 'motion/react';
 import { TrendingUp, TrendingDown, BarChart2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { api } from '@/services/api';
+import { api } from "@/services/mock-api";
 import Essay  from "@/types/Essay";
 
 const StatCard = ({ title, value, icon, trend }: { 

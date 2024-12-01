@@ -46,8 +46,8 @@ export default function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-8 mt-8"
         >
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
-            Prepare for success
+          <h1 className="text-4xl md:text-6xl font-bold text-indigo-600 bg-clip-text">
+            Prepare for ENEM
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Enhance your writing skills with our AI-powered learning platform.
