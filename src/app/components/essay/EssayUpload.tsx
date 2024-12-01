@@ -105,7 +105,7 @@ export default function EssayUpload({ onClose }: EssayUploadProps) {
                     Drag and drop your file here, or{' '}
                     <button
                       onClick={() => document.getElementById('fileInput')?.click()}
-                      className="text-primary hover:text-accent"
+                      className="text-indigo-400 font-semibold hover:text-accent"
                     >
                       browse
                     </button>
