@@ -3,6 +3,7 @@
 import { useState } from "react"; 
 import { Upload, CheckCircle } from 'lucide-react';
 import { motion } from "motion/react";
+import { api } from "@/services/api";
 
 interface EssayUploadProps {  
   onClose: () => void;
@@ -11,22 +12,23 @@ interface EssayUploadProps {
 export default function EssayUpload({ onClose }: EssayUploadProps) {
   const [subject, setSubject] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleEssayFileUpload() {
+  async function handleEssayFileUpload() {
     if (!file || !subject) return;
-    setUploading(true);
-    // TODO: Implement file upload logic
-    setTimeout(() => {
-      setUploading(false);
-      setIsLoading(false);
-      onClose();
-    }, 2000);
-  }
+    
+    setIsLoading(true);
+    setError(null);
 
-  if (uploading) {
-    console.log('Is uploading')
+    try {
+      await api.uploadEssay(file, subject);
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to upload essay');
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -43,6 +45,12 @@ export default function EssayUpload({ onClose }: EssayUploadProps) {
           Get instant feedback and improve your writing
         </p>
       </motion.section>
+
+      {error && (
+        <div className="text-red-500 text-sm mt-2">
+          {error}
+        </div>
+      )}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
