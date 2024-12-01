@@ -1,6 +1,6 @@
 'use client';
 
-import { Upload, ArrowRight, CheckCircle, Clock } from 'lucide-react';
+import { Upload, ArrowRight, CheckCircle, Clock, ChartArea } from 'lucide-react';
 import { motion } from "motion/react";
 import Essay from "../../../types/Essay";
 import { useRouter } from 'next/navigation';
@@ -59,15 +59,27 @@ export default function EssayList() {
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Track your progress and review your submissions
         </p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => router.push('/essays/upload')}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg flex items-center gap-2 mx-auto"
-        >
-          <Upload className="w-5 h-5" />
-          Submit New Essay
-        </motion.button>
+        <div className=''>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/essays/upload')}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg flex items-center gap-2 mx-auto my-4"
+          >
+            <Upload className="w-5 h-5" />
+            Submit new essay
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/essays/evolution')}
+            className="bg-white text-indigo-500 px-6 py-3 rounded-full font-bold text-lg shadow-lg flex items-center gap-2 mx-auto"
+          >
+            <ChartArea className="w-5 h-5" />
+            View my progress
+          </motion.button>
+        </div>
       </motion.section>
 
       {/* Essays Grid */}
