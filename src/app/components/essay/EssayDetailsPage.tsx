@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Clock, Award, BookOpen, Brain, Lightbulb } from 'lucide-react';
 
 interface EssayDetailsPageProps {
-  id: string;
+  id: string | null;
 }
 
 export default function EssayDetailsPage({ id }: EssayDetailsPageProps) {
@@ -19,7 +19,7 @@ export default function EssayDetailsPage({ id }: EssayDetailsPageProps) {
     const loadEssay = async () => {
       try {
         console.log(id)
-        const data = await api.getEssayWithFeedback(id);
+        const data = await api.getEssayWithFeedback(id || '1');
         setEssay(data);
         setError(null);
       } catch (err) {

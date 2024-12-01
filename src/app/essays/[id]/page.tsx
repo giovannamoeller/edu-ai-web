@@ -1,15 +1,16 @@
+'use client';
+
 import MainLayout from '@/app/components/layout/MainLayout';
 import EssayDetailsPage from '@/app/components/essay/EssayDetailsPage';
+import { useParams } from 'next/navigation';
 
-type Props = {
-  params: { id: string }
-  searchParams?: { [key: string]: string | string[] | undefined }
-}
+export default function Page() {
+  const params = useParams();
+  const id = params?.id as string;
 
-export default async function Page({ params }: Props) {
   return (
     <MainLayout>
-      <EssayDetailsPage id={params.id} />
+      <EssayDetailsPage id={id} />
     </MainLayout>
   );
 }
