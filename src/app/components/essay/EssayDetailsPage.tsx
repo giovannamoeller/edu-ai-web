@@ -114,7 +114,7 @@ export default function EssayDetailsPage({ id }: EssayDetailsPageProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + index * 0.1 }}
           >
-            <Card>
+            <Card className="h-[180px]"> {/* Set fixed height */}
               <CardHeader>
                 <CardTitle className="flex items-center justify-between text-lg">
                   <span className="flex items-center gap-2">
@@ -125,7 +125,9 @@ export default function EssayDetailsPage({ id }: EssayDetailsPageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700">{data.feedback}</p>
+                <p className="text-gray-700 line-clamp-2"> {/* Limit to 2 lines of text */}
+                  {data.feedback}
+                </p>
               </CardContent>
             </Card>
           </motion.div>
