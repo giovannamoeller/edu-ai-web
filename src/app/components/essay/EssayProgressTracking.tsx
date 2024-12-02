@@ -5,7 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { motion } from 'motion/react';
 import { TrendingUp, TrendingDown, BarChart2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { api } from "@/services/mock-api";
+import { api } from "@/services/api";
 import Essay  from "@/types/Essay";
 
 const StatCard = ({ title, value, icon, trend }: { 
@@ -49,7 +49,7 @@ export default function EssayProgressTracking() {
         const data = await api.fetchEssays();
         // Filter only completed essays with scores
         setEssays(data.filter(essay => 
-          essay.status === 'completed' && typeof essay.score === 'number'
+          typeof essay.totalScore === 'number'
         ));
         setError(null);
       } catch (err) {
@@ -67,7 +67,7 @@ export default function EssayProgressTracking() {
       return { highest: 0, lowest: 0, average: 0, totalEssays: 0 };
     }
 
-    const scores = essays.map(essay => essay.score || 0);
+    const scores = essays.map(essay => essay.totalScore || 0);
     return {
       highest: Math.max(...scores),
       lowest: Math.min(...scores),
@@ -79,7 +79,7 @@ export default function EssayProgressTracking() {
   const chartData = useMemo(() => {
     return essays.map(essay => ({
       date: essay.createdAt,
-      score: essay.score || 0,
+      score: essay.totalScore || 0,
       subject: essay.subject
     })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [essays]);
@@ -203,7 +203,7 @@ export default function EssayProgressTracking() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="py-4 flex items-center justify-between"
+                className="py-4 flex gap-2 items-center justify-between"
               >
                 <div>
                   <h3 className="font-medium">{essay.subject}</h3>

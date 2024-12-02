@@ -3,7 +3,7 @@
 import { useState } from "react"; 
 import { Upload, CheckCircle } from 'lucide-react';
 import { motion } from "motion/react";
-import { api } from "@/services/mock-api";
+import { api } from "@/services/api";
 
 interface EssayUploadProps {  
   onClose: () => void;

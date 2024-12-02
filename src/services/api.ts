@@ -40,12 +40,8 @@ class APIService {
 
   async fetchEssays(): Promise<Essay[]> {
     const response = await fetch(`${this.baseURL}/essays`, {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
+      method: 'GET'
     });
-    console.log(response)
 
     return this.handleResponse<Essay[]>(response);
   }

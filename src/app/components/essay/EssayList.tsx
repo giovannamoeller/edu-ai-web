@@ -4,18 +4,21 @@ import { Upload, ArrowRight, CheckCircle, Clock, ChartArea } from 'lucide-react'
 import { motion } from "motion/react";
 import Essay from "../../../types/Essay";
 import { useRouter } from 'next/navigation';
-import { api } from "@/services/mock-api";
+import { api } from "@/services/api";
 import { useEffect, useState } from 'react';
+import EssayDetailsPage from './EssayDetailsPage';
 
 export default function EssayList() {
   const router = useRouter();
   const [essays, setEssays] = useState<Essay[]>([]);
+  const [selectedEssay, setSelectedEssay] = useState<Essay | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   async function loadEssays() {
     try {
       const data = await api.fetchEssays();
+      console.log(data)
       setEssays(data);
       setError(null);
     } catch (err) {
@@ -30,13 +33,13 @@ export default function EssayList() {
   }, []);
 
   useEffect(() => {
-    const hasProcessingEssays = essays.some(essay => essay.status === 'processing');
+    const hasProcessingEssays = essays.some(essay => essay.totalScore != null);
     
     if (hasProcessingEssays) {
       const interval = setInterval(loadEssays, 2000);
       return () => clearInterval(interval);
     }
-  }, [essays]);
+  }, []);
 
   if (isLoading) {
     return (
@@ -57,6 +60,14 @@ export default function EssayList() {
           Try again
         </button>
       </div>
+    );
+  }
+
+  if (selectedEssay) {
+    return (
+      <EssayDetailsPage 
+        essay={selectedEssay} 
+        onClose={() => setSelectedEssay(null)} />
     );
   }
 
@@ -115,22 +126,22 @@ export default function EssayList() {
               whileHover={{ y: -5 }}
               className="bg-white rounded-xl shadow-lg overflow-hidden"
             >
-              <div className={`h-2 ${essay.status === 'completed' 
+              <div className={`h-2 ${essay.totalScore !== null 
                 ? 'bg-gradient-to-r from-green-500 to-emerald-500'
                 : 'bg-gradient-to-r from-yellow-500 to-orange-500'
               }`} />
               <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex gap-8 justify-between items-start mb-4">
                   <div>
                     <h3 className="text-xl font-semibold mb-1">{essay.subject}</h3>
                     <p className="text-gray-500 text-sm">
                       Submitted on {new Date(essay.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  {essay.status === 'completed' ? (
+                  {essay.totalScore != null ? (
                     <div className="flex items-center gap-2 text-green-500">
                       <CheckCircle className="w-5 h-5" />
-                      <span className="text-2xl font-bold">{essay.score}</span>
+                      <span className="text-2xl font-bold">{essay.totalScore}</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2 text-orange-500">
@@ -140,11 +151,11 @@ export default function EssayList() {
                   )}
                 </div>
                 
-                {essay.status === 'completed' && (
+                {essay.totalScore != null && (
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => router.push(`/essays/${essay.id}`)}
+                    onClick={() => setSelectedEssay(essay)}
                     className="w-full mt-4 px-4 py-2 bg-background rounded-lg hover:bg-background/80 transition-colors flex items-center justify-center gap-2"
                   >
                     View Details

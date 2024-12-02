@@ -1,9 +1,13 @@
+import EssayFeedback from "./EssayFeedback";
+
 interface Essay {
   id: string;
   subject: string;
-  status: 'completed' | 'processing';
   createdAt: Date;
-  score?: number;
+  totalScore?: number;
+  feedback: EssayFeedback;
+  rawContent: string;
+  url: string;
 }
 
 export default Essay;
